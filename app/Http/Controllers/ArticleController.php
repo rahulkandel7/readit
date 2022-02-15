@@ -15,7 +15,13 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        return view('articles.index');
+        //Article ->database access
+        //Articles -> information
+        //select * from tblname;
+        // all() -> select * 
+        // Array data 
+        $articles = Article::all();
+        return view('articles.index',compact('articles'));
     }
 
     /**
@@ -41,14 +47,14 @@ class ArticleController extends Controller
             'slug' => 'string|required',
             'description' => 'string|required',
             'photopath' => 'image|required|mimes:jpg,png',
-        ]);
+        ]); //validation
 
-        if($request->has('photopath')){
+        if($request->has('photopath')){ 
             $rname = Str::random(20);
             $fexe = $request->file('photopath')->extension();
             $fname = "$rname.$fexe";
-            $request->file('photopath')->storeAs('articles',$fname);
-            $data['photopath'] = 'articles/'.$fname;
+            $request->file('photopath')->storeAs('public/articles',$fname);
+            $data['photopath'] = 'public/articles/'.$fname;
         }
 
         Article::create($data);
